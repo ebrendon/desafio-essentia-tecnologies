@@ -1,0 +1,38 @@
+# Docker
+.env
+/.env
+*.log
+
+# Node
+node_modules/
+dist/
+build/
+.npm/
+
+# Composer / PHP
+vendor/
+.phpunit.result.cache
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.env/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
