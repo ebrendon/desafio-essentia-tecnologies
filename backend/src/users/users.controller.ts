@@ -6,11 +6,15 @@ import {
     Patch,
     Param,
     Delete,
+    UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 import bcrypt from 'bcrypt';
+
+@UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
     constructor(private readonly prismaService: PrismaService) {}
