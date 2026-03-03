@@ -10,49 +10,36 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-import bcrypt from 'bcrypt';
+import { UsersService } from './users.service';
 
 @UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
-    constructor(private readonly prismaService: PrismaService) {}
+    constructor(private readonly usersService: UsersService) {}
 
     @Post()
     create(@Body() createUserDto: CreateUserDto) {
-        return this.prismaService.user.create({
-            data: {
-                ...createUserDto,
-                password: bcrypt.hashSync(createUserDto.password, 10),
-            },
-        });
+        return this.usersService.create(createUserDto);
     }
 
     @Get()
     findAll() {
-        return this.prismaService.user.findMany();
+        return this.usersService.findAll();
     }
 
     @Get(':id')
     findOne(@Param('id') id: string) {
-        return this.prismaService.user.findUnique({
-            where: { id },
-        });
+        return this.usersService.findOne(id);
     }
 
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-        return this.prismaService.user.update({
-            where: { id },
-            data: updateUserDto,
-        });
+        return this.usersService.update(id, updateUserDto);
     }
 
     @Delete(':id')
     remove(@Param('id') id: string) {
-        return this.prismaService.user.delete({
-            where: { id },
-        });
+        return this.usersService.remove(id);
     }
 }
