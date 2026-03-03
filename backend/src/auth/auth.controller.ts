@@ -1,4 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { Public } from 'src/auth/decorators/public.decorator';
 import { LoginDto } from './login.dto';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -7,6 +8,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
+    @Public()
     @Post('login')
     @ApiOperation({ summary: 'Authenticate and receive a JWT token' })
     login(@Body() loginDto: LoginDto) {
