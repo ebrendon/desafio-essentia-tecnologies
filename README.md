@@ -4,42 +4,63 @@ O teste simula uma contratação por uma empresa fictícia chamada "TechX" para 
 ## Pré-requisitos
 
 Para rodar este projeto, você precisará ter instalado em sua máquina:
-- [Docker](https://docs.docker.com/get-docker/) (No Windows e macOS, recomenda-se a instalação do **Docker Desktop**)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Node.js](https://nodejs.org/) (Versão 20+ recomendada)
+- [Docker](https://docs.docker.com/get-docker/) e Docker Compose
 
-## Como começar (Setup Inicial)
+## Como iniciar o projeto
 
-Siga os passos abaixo para configurar o ambiente de desenvolvimento localmente.
+### 1. Subindo a Infraestrutura com Docker (Banco de dados)
+O arquivo `docker-compose.yml` que providencia o MySQL está localizado dentro da pasta `backend`.
 
-1. **Clone do repositório**
-   ```bash
-   git clone <url-do-repositorio>
-   cd desafio-essentia-tecnologies
-   ```
+```bash
+# Acesse a pasta do backend
+cd backend
 
-2. **Configuração das Variáveis de Ambiente**
-   Crie uma cópia do arquivo de exemplo `.env-example` nomeando-o como `.env`:
+# Copie o arquivo de variáveis de ambiente
+cp .env-example .env
 
-   - **Linux/macOS**:
-     ```bash
-     cp .env-example .env
-     ```
-   - **Windows (PowerShell)**:
-     ```powershell
-     Copy-Item .env-example -Destination .env
-     ```
-   _Caso necessário, você pode alterar as credenciais no arquivo `.env` gerado._
+# Suba o banco de dados em plano de fundo:
+docker-compose up -d
+```
 
-3. **Subindo a Infraestrutura com Docker Compose**
-   Inicie os containers utilizando o docker compose (em modo desanexado com `-d`):
-   ```bash
-   docker-compose up -d
-   ```
-   
-   Isso irá baixar as imagens como a do MySQL e iniciar o banco de dados.
+### 2. Configurando e Rodando a API NestJS
+Ainda dentro da pasta `backend`, configure a aplicação e conecte ao banco:
+
+```bash
+# Instale todas as dependências do projeto
+npm install
+
+# Sincronize o banco de dados via Prisma (cria as tabelas do projeto)
+npx prisma db push
+
+# (Opcional) Faça upload do Prisma Client mais recente
+npx prisma generate
+
+# Inicie o servidor em modo de desenvolvimento
+npm run start:dev
+```
+
+### 3. Acessando e testando a API
+
+A API estará disponível por padrão na porta **3000**.
+Este projeto utiliza o **Swagger** para documentar todas as rotas e facilitar a interação (via navegador) sem necessidade de um Postman.
+
+- **Documentação da API Swagger:**
+  Para criar usuários, listar atividades, ver detalhes e testar o login, basta acessar:
+  [http://localhost:3000/api](http://localhost:3000/api)
+
+## Regras de Negócio e Funcionalidades
+
+- **CRUD de Tarefas:** Criação, Edição, Deleção, Visualização.
+- **Isolamento e Segurança (Data Leakage Fix):** 
+  Um usuário comum (`USER`) só pode editar ou deletar as atividades **que foram criadas por ele mesmo**.
+  O `ADMIN` possui acesso irrestrito para alterar e deletar a atividade de qualquer pessoa.
+- **Autenticação com JWT:**
+  O sistema é munido de proteção em todos os endpoints sensíveis via Auth Guard. Senhas são "cacheadas" fortemente via `Bcrypt`.
+  *(Dica: Rotas como `POST /users` (SignUp), `POST /auth/login` e `GET /tasks` são abertas para facilitar o uso)*
 
 ## Estrutura do Projeto
 
-- `/backend`: Diretório destinado ao código do backend.
-- `/frontend`: Diretório destinado ao código do frontend.
-- `docker-compose.yml`: Arquivo responsável pela orquestração dos containers (ex: banco de dados).
+- `/backend`: Diretório destinado ao código do backend (NestJS + Prisma + MySQL).
+  - `docker-compose.yml`: Arquivo responsável pela orquestração do banco de dados MySQL para persistência de dados localmente.
+- `/frontend`: *Em Construção*.
