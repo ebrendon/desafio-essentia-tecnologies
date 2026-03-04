@@ -1,27 +1,36 @@
-# Frontend
+# Frontend (Gerenciador de Tarefas)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.21.
+Este é o módulo de Interface de Usuário do Desafio Essentia Tecnologies, desenvolvido para interagir de forma robusta e dinâmica com as APIs do backend.
 
-## Development server
+## 🛠️ Tecnologias Utilizadas
+- **Angular 18+** (Framework SPA Componentizado e Tipado).
+- **Tailwind CSS** (Utility-First CSS para construção ágil de layouts responsivos e bonitos).
+- **RxJs** (Programação reativa com Observables).
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## 🚀 Como Executar Localmente
 
-## Code scaffolding
+### Pré-requisitos
+Certifique-se de que a **API (Backend) esteja executando** (porta 3000) e possua um banco de dados ativo.
+O Angular está predefinido (via `proxy.conf.json`) para automaticamente despachar requests iniciados por `/api` para a url `http://localhost:3000`.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Execução
 
-## Build
+No seu terminal, já dentro da pasta `frontend`:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+1. Instale todas as dependências requeridas utilizando NPM:
+   ```sh
+   npm install
+   ```
+2. Inicialize o servidor de desenvolvimento da aplicação Angular:
+   ```sh
+   npm start
+   ```
 
-## Running unit tests
+A página recarregará automaticamente ao detectar se o servidor realizou um build bem-sucedido. Acesse-a utilizando a URL principal: **[http://localhost:4200/](http://localhost:4200/)**.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## 🎨 Funcionalidades
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Rota Pública** para visualização da lista de tarefas, sem necessitar login;
+- Integração de **Formulários Reativos** para Cadastro e Login de usuário (proteção Guards);
+- Interface Polida (Minimalista) englobando UI Modal Interativa para edição e criação de tasks;
+- **Componente Customizado Exclusivo** usando Tailwind CSS para modal de alerta focado em **Exclusão de Tarefas**, mitigando o uso nativo intrusivo do browser.

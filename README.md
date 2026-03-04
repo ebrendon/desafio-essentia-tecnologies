@@ -59,8 +59,24 @@ Este projeto utiliza o **Swagger** para documentar todas as rotas e facilitar a 
   O sistema é munido de proteção em todos os endpoints sensíveis via Auth Guard. Senhas são "cacheadas" fortemente via `Bcrypt`.
   *(Dica: Rotas como `POST /users` (SignUp), `POST /auth/login` e `GET /tasks` são abertas para facilitar o uso)*
 
+### 4. Configurando e Rodando o Frontend (Angular)
+Abra uma **nova aba de terminal** (mantenha o backend rodando) e execute os passos para a interface:
+
+```bash
+# Volte para a raiz do projeto e entre na pasta do frontend
+cd frontend
+
+# Instale as dependências
+npm install
+
+# Inicie o servidor de desenvolvimento
+npm run start
+```
+Após a compilação, o sistema estará operando e disponível para acesso em: **[http://localhost:4200](http://localhost:4200)**.
+*(O Angular já está configurado com proxy para conectar à sua API hospedada de NestJS rodando na porta 3000)*.
+
 ## Estrutura do Projeto
 
-- `/backend`: Diretório destinado ao código do backend (NestJS + Prisma + MySQL).
-  - `docker-compose.yml`: Arquivo responsável pela orquestração do banco de dados MySQL para persistência de dados localmente.
-- `/frontend`: *Em Construção*.
+- `/backend`: Diretório destinado ao código do backend (NestJS + Prisma + PostgreSQL via Docker).
+  - `docker-compose.yml`: Arquivo responsável pela orquestração do banco de dados para persistência localmente.
+- `/frontend`: Interface da aplicação desenvolvida com Angular 18 e estilizada com Tailwind CSS. Integrada totalmente à API NestJS via Proxy.
