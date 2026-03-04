@@ -5,11 +5,12 @@ import { TasksService } from '../../services/tasks.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Task } from '../../../../shared/models/task.model';
 import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
+import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, TaskModalComponent, RouterLink],
+  imports: [CommonModule, TaskModalComponent, ConfirmModalComponent, RouterLink],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss'
 })
@@ -22,6 +23,9 @@ export class TaskListComponent implements OnInit {
   
   isModalOpen = false;
   selectedTask: Task | null = null;
+  
+  isDeleteModalOpen = false;
+  taskToDeleteId: string | null = null;
 
   ngOnInit() {
     this.loadTasks();
@@ -70,11 +74,23 @@ export class TaskListComponent implements OnInit {
   }
 
   deleteTask(id: string) {
-    if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
-      this.tasksService.remove(id).subscribe(() => {
+    this.taskToDeleteId = id;
+    this.isDeleteModalOpen = true;
+  }
+
+  confirmDelete() {
+    if (this.taskToDeleteId) {
+      this.tasksService.remove(this.taskToDeleteId).subscribe(() => {
         this.loadTasks();
+        this.isDeleteModalOpen = false;
+        this.taskToDeleteId = null;
       });
     }
+  }
+
+  cancelDelete() {
+    this.isDeleteModalOpen = false;
+    this.taskToDeleteId = null;
   }
 
   logout() {

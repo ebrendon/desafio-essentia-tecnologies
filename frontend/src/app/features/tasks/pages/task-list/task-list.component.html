@@ -96,3 +96,15 @@
     (save)="onSaveTask($event)">
   </app-task-modal>
 }
+
+<!-- Render Delete Confirmation Modal -->
+@if (isDeleteModalOpen) {
+  <app-confirm-modal
+    title="Excluir Tarefa"
+    message="Tem certeza de que deseja excluir permanentemente esta tarefa? Essa ação não pode ser desfeita."
+    confirmButtonText="Excluir"
+    cancelButtonText="Cancelar"
+    (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()">
+  </app-confirm-modal>
+}
