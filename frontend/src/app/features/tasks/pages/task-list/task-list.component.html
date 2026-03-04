@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-gray-100">
   <nav class="bg-white shadow">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
@@ -28,43 +28,68 @@
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate">Todas as Tarefas</h2>
         @if (currentUser) {
-          <button (click)="openCreateModal()" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+          <button (click)="openCreateModal()" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg class="-ml-1 mr-2 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
             Criar Tarefa
           </button>
         }
       </div>
 
       <!-- Filters Bar -->
-      <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-4 rounded-md shadow-sm border border-gray-200 gap-4">
+      <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between p-2 gap-4">
         <div class="flex items-center space-x-3">
           <label for="statusFilter" class="text-sm font-medium text-gray-700">Filtrar por Status:</label>
-          <select id="statusFilter" [formControl]="statusControl" class="block w-40 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md border">
-            <option value="ALL">Todas</option>
+          <select id="statusFilter" [formControl]="statusControl" class="block w-50 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md border">
+            <option value="ALL">Todas as tarefas</option>
             <option value="PENDING">Pendentes</option>
             <option value="COMPLETED">Concluídas</option>
           </select>
         </div>
 
-        @if (currentUser) {
+        <!-- @if (currentUser) {
           <div class="flex items-center border-t sm:border-t-0 sm:border-l border-gray-200 pt-4 sm:pt-0 sm:pl-4">
             <input id="mineOnly" type="checkbox" [formControl]="mineOnlyControl" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
             <label for="mineOnly" class="ml-2 block text-sm font-medium text-gray-700">
               Apenas minhas tarefas
             </label>
           </div>
+        } -->
+
+        @if (currentUser) {
+          <div class="flex items-center border-t sm:border-t-0 sm:border-l border-gray-200 pt-4 sm:pt-0 sm:pl-4">
+            
+            <label class="relative inline-flex items-center cursor-pointer group">
+              <input id="mineOnly" type="checkbox" [formControl]="mineOnlyControl" class="sr-only peer">
+              
+              <div class="w-11 h-6 bg-gray-200 rounded-full peer 
+                          peer-focus:ring-4 peer-focus:ring-blue-100 
+                          peer-checked:after:translate-x-full peer-checked:after:border-white 
+                          after:content-[''] after:absolute after:top-[2px] after:left-[2px] 
+                          after:bg-white after:border-gray-300 after:border after:rounded-full 
+                          after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+              </div>
+              
+              <span class="ml-3 text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
+                Minhas tarefas
+              </span>
+            </label>
+
+          </div>
         }
       </div>
 
-      <div class="bg-white shadow overflow-hidden sm:rounded-md border border-gray-200">
-        <ul role="list" class="divide-y divide-gray-200">
+      <div class="overflow-hidden">
+        <ul role="list" class="space-y-2">
           
           @for (task of tasks; track task.id) {
-            <li>
+            <li class="bg-white shadow sm:rounded-md border border-gray-200">
               <div class="px-4 py-4 flex items-center sm:px-6">
                 <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
                   <div class="truncate">
                     <div class="flex text-sm">
-                      <p class="font-medium text-blue-600 truncate">{{ task.title }}</p>
+                      <p class="font-medium text-neutral-950 truncate">{{ task.title }}</p>
                       @if (task.completed) {
                         <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Concluída</span>
                       } @else {
