@@ -12,8 +12,18 @@ export class TasksService {
         });
     }
 
-    findAll() {
-        return this.prismaService.task.findMany();
+    findAll(filters?: { completed?: string; authorId?: string }) {
+        const where: any = {};
+        
+        if (filters?.completed !== undefined) {
+            where.completed = filters.completed === 'true';
+        }
+        
+        if (filters?.authorId) {
+            where.authorId = filters.authorId;
+        }
+
+        return this.prismaService.task.findMany({ where });
     }
 
     findOne(id: string) {

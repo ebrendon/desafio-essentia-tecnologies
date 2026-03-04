@@ -26,16 +26,40 @@ export class TaskListComponent implements OnInit {
   
   isDeleteModalOpen = false;
   taskToDeleteId: string | null = null;
+  
+  filterStatus: 'ALL' | 'COMPLETED' | 'PENDING' = 'ALL';
+  filterMineOnly: boolean = false;
 
   ngOnInit() {
     this.loadTasks();
   }
 
   loadTasks() {
-    this.tasksService.findAll().subscribe({
+    const filters: { completed?: boolean; authorId?: string } = {};
+
+    if (this.filterStatus === 'COMPLETED') filters.completed = true;
+    else if (this.filterStatus === 'PENDING') filters.completed = false;
+
+    if (this.filterMineOnly && this.currentUser) {
+      filters.authorId = this.currentUser.sub;
+    }
+
+    this.tasksService.findAll(filters).subscribe({
       next: (tasks) => this.tasks = tasks,
       error: (err) => console.error('Falha ao carregar as tarefas', err)
     });
+  }
+
+  onFilterStatusChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    this.filterStatus = target.value as any;
+    this.loadTasks();
+  }
+
+  onFilterMineOnlyChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.filterMineOnly = target.checked;
+    this.loadTasks();
   }
 
   canManage(task: Task): boolean {

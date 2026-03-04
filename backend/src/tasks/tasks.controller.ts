@@ -8,6 +8,7 @@ import {
     Delete,
     Req,
     UseGuards,
+    Query,
 } from '@nestjs/common';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { TasksService } from './tasks.service';
@@ -36,8 +37,11 @@ export class TasksController {
     @Public()
     @Get()
     @ApiOperation({ summary: 'List all tasks' })
-    findAll() {
-        return this.tasksService.findAll();
+    findAll(
+        @Query('completed') completed?: string,
+        @Query('authorId') authorId?: string
+    ) {
+        return this.tasksService.findAll({ completed, authorId });
     }
 
     @Public()

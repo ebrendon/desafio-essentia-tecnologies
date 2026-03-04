@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Task, CreateTaskDto, UpdateTaskDto } from '../../../shared/models/task.model';
 
@@ -10,8 +10,15 @@ export class TasksService {
   private http = inject(HttpClient);
   private apiUrl = '/api/tasks';
 
-  findAll(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.apiUrl);
+  findAll(filters?: { completed?: boolean; authorId?: string }): Observable<Task[]> {
+    let params = new HttpParams();
+    if (filters?.completed !== undefined) {
+      params = params.set('completed', String(filters.completed));
+    }
+    if (filters?.authorId) {
+      params = params.set('authorId', filters.authorId);
+    }
+    return this.http.get<Task[]>(this.apiUrl, { params });
   }
 
   findOne(id: string): Observable<Task> {

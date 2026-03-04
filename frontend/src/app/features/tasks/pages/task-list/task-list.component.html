@@ -34,6 +34,27 @@
         }
       </div>
 
+      <!-- Filters Bar -->
+      <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-4 rounded-md shadow-sm border border-gray-200 gap-4">
+        <div class="flex items-center space-x-3">
+          <label for="statusFilter" class="text-sm font-medium text-gray-700">Filtrar por Status:</label>
+          <select id="statusFilter" (change)="onFilterStatusChange($event)" class="block w-40 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md border">
+            <option value="ALL">Todas</option>
+            <option value="PENDING">Pendentes</option>
+            <option value="COMPLETED">Concluídas</option>
+          </select>
+        </div>
+
+        @if (currentUser) {
+          <div class="flex items-center border-t sm:border-t-0 sm:border-l border-gray-200 pt-4 sm:pt-0 sm:pl-4">
+            <input id="mineOnly" type="checkbox" (change)="onFilterMineOnlyChange($event)" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+            <label for="mineOnly" class="ml-2 block text-sm font-medium text-gray-700">
+              Apenas minhas tarefas
+            </label>
+          </div>
+        }
+      </div>
+
       <div class="bg-white shadow overflow-hidden sm:rounded-md border border-gray-200">
         <ul role="list" class="divide-y divide-gray-200">
           
