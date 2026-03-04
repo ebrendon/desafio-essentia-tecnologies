@@ -19,3 +19,8 @@ export interface UpdateTaskDto {
   description?: string;
   completed?: boolean;
 }
+
+export interface TaskFilter {
+  completed?: boolean;
+  authorId?: string;
+}

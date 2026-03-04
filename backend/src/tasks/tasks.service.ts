@@ -1,6 +1,7 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { FilterTaskDto } from './dto/filter-task.dto';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -12,11 +13,11 @@ export class TasksService {
         });
     }
 
-    findAll(filters?: { completed?: string; authorId?: string }) {
+    findAll(filters?: FilterTaskDto) {
         const where: any = {};
         
         if (filters?.completed !== undefined) {
-            where.completed = filters.completed === 'true';
+            where.completed = filters.completed;
         }
         
         if (filters?.authorId) {

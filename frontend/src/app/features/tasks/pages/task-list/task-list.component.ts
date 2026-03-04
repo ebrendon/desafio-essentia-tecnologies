@@ -1,6 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { combineLatest, Subscription } from 'rxjs';
+import { debounceTime, startWith } from 'rxjs/operators';
 import { TasksService } from '../../services/tasks.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Task } from '../../../../shared/models/task.model';
@@ -10,11 +13,11 @@ import { ConfirmModalComponent } from '../../../../shared/components/confirm-mod
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, TaskModalComponent, ConfirmModalComponent, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, TaskModalComponent, ConfirmModalComponent, RouterLink],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss'
 })
-export class TaskListComponent implements OnInit {
+export class TaskListComponent implements OnInit, OnDestroy {
   private tasksService = inject(TasksService);
   private authService = inject(AuthService);
 
@@ -27,20 +30,38 @@ export class TaskListComponent implements OnInit {
   isDeleteModalOpen = false;
   taskToDeleteId: string | null = null;
   
-  filterStatus: 'ALL' | 'COMPLETED' | 'PENDING' = 'ALL';
-  filterMineOnly: boolean = false;
+  statusControl = new FormControl<'ALL' | 'COMPLETED' | 'PENDING'>('ALL');
+  mineOnlyControl = new FormControl<boolean>(false);
+  private filtersSub?: Subscription;
 
   ngOnInit() {
-    this.loadTasks();
+    this.setupFilters();
   }
 
-  loadTasks() {
+  ngOnDestroy() {
+    if (this.filtersSub) {
+      this.filtersSub.unsubscribe();
+    }
+  }
+
+  setupFilters() {
+    this.filtersSub = combineLatest([
+      this.statusControl.valueChanges.pipe(startWith(this.statusControl.value)),
+      this.mineOnlyControl.valueChanges.pipe(startWith(this.mineOnlyControl.value))
+    ]).pipe(
+      debounceTime(300)
+    ).subscribe(([status, mineOnly]) => {
+      this.loadTasks(status, mineOnly);
+    });
+  }
+
+  loadTasks(status: 'ALL' | 'COMPLETED' | 'PENDING' | null, mineOnly: boolean | null) {
     const filters: { completed?: boolean; authorId?: string } = {};
 
-    if (this.filterStatus === 'COMPLETED') filters.completed = true;
-    else if (this.filterStatus === 'PENDING') filters.completed = false;
+    if (status === 'COMPLETED') filters.completed = true;
+    else if (status === 'PENDING') filters.completed = false;
 
-    if (this.filterMineOnly && this.currentUser) {
+    if (mineOnly && this.currentUser) {
       filters.authorId = this.currentUser.sub;
     }
 
@@ -48,18 +69,6 @@ export class TaskListComponent implements OnInit {
       next: (tasks) => this.tasks = tasks,
       error: (err) => console.error('Falha ao carregar as tarefas', err)
     });
-  }
-
-  onFilterStatusChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    this.filterStatus = target.value as any;
-    this.loadTasks();
-  }
-
-  onFilterMineOnlyChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.filterMineOnly = target.checked;
-    this.loadTasks();
   }
 
   canManage(task: Task): boolean {
@@ -86,12 +95,12 @@ export class TaskListComponent implements OnInit {
   onSaveTask(data: { id?: string, payload: any }) {
     if (data.id) {
       this.tasksService.update(data.id, data.payload).subscribe(() => {
-        this.loadTasks();
+        this.loadTasks(this.statusControl.value, this.mineOnlyControl.value);
         this.closeModal();
       });
     } else {
       this.tasksService.create(data.payload).subscribe(() => {
-        this.loadTasks();
+        this.loadTasks(this.statusControl.value, this.mineOnlyControl.value);
         this.closeModal();
       });
     }
@@ -105,7 +114,7 @@ export class TaskListComponent implements OnInit {
   confirmDelete() {
     if (this.taskToDeleteId) {
       this.tasksService.remove(this.taskToDeleteId).subscribe(() => {
-        this.loadTasks();
+        this.loadTasks(this.statusControl.value, this.mineOnlyControl.value);
         this.isDeleteModalOpen = false;
         this.taskToDeleteId = null;
       });

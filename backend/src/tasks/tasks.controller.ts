@@ -14,6 +14,7 @@ import { Public } from 'src/auth/decorators/public.decorator';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { FilterTaskDto } from './dto/filter-task.dto';
 import type { Request } from 'express';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
@@ -37,11 +38,8 @@ export class TasksController {
     @Public()
     @Get()
     @ApiOperation({ summary: 'List all tasks' })
-    findAll(
-        @Query('completed') completed?: string,
-        @Query('authorId') authorId?: string
-    ) {
-        return this.tasksService.findAll({ completed, authorId });
+    findAll(@Query() filters: FilterTaskDto) {
+        return this.tasksService.findAll(filters);
     }
 
     @Public()
