@@ -90,6 +90,6 @@ Se você rodou o comando `npx prisma db seed` na etapa 2, os seguintes usuários
 
 ## Estrutura do Projeto
 
-- `/backend`: Diretório destinado ao código do backend (NestJS + Prisma + PostgreSQL via Docker).
+- `/backend`: Diretório destinado ao código do backend (NestJS + Prisma + MySQL via Docker).
   - `docker-compose.yml`: Arquivo responsável pela orquestração do banco de dados para persistência localmente.
 - `/frontend`: Interface da aplicação desenvolvida com Angular 18 e estilizada com Tailwind CSS. Integrada totalmente à API NestJS via Proxy.
