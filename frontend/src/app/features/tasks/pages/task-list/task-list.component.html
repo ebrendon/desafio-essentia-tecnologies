@@ -48,15 +48,6 @@
           </select>
         </div>
 
-        <!-- @if (currentUser) {
-          <div class="flex items-center border-t sm:border-t-0 sm:border-l border-gray-200 pt-4 sm:pt-0 sm:pl-4">
-            <input id="mineOnly" type="checkbox" [formControl]="mineOnlyControl" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-            <label for="mineOnly" class="ml-2 block text-sm font-medium text-gray-700">
-              Apenas minhas tarefas
-            </label>
-          </div>
-        } -->
-
         @if (currentUser) {
           <div class="flex items-center border-t sm:border-t-0 sm:border-l border-gray-200 pt-4 sm:pt-0 sm:pl-4">
             
@@ -88,8 +79,11 @@
               <div class="px-4 py-4 flex items-center sm:px-6">
                 <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
                   <div class="truncate">
-                    <div class="flex text-sm">
-                      <p class="font-medium text-neutral-950 truncate">{{ task.title }}</p>
+                    <div class="flex text-sm items-center">
+                      @if (canManage(task)) {
+                        <input type="checkbox" [checked]="task.completed" (change)="toggleTaskCompletion($event, task)" class="h-4 w-4 mr-3 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer">
+                      }
+                      <p class="font-medium text-neutral-950 truncate mr-3">{{ task.title }}</p>
                       @if (task.completed) {
                         <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Concluída</span>
                       } @else {

@@ -129,4 +129,14 @@ export class TaskListComponent implements OnInit, OnDestroy {
   logout() {
     this.authService.logout();
   }
+
+  toggleTaskCompletion(event: Event, task: Task) {
+    if (!this.canManage(task)) {
+      event.preventDefault();
+      return;
+    }
+    this.tasksService.update(task.id, { completed: !task.completed }).subscribe(() => {
+      this.loadTasks(this.statusControl.value, this.mineOnlyControl.value);
+    });
+  }
 }
