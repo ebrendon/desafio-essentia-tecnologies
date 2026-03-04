@@ -1,4 +1,7 @@
 # Desafio Essentia Group
+
+![Preview do Painel de Tarefas](./docs/taskx_preview.png)
+
 O teste simula uma contratação por uma empresa fictícia chamada "TechX" para desenvolver uma aplicação web de gerenciamento de tarefas (to-do list). A empresa precisa de uma solução simples e eficiente para que seus funcionários possam organizar suas tarefas diárias.
 
 ## Pré-requisitos
@@ -22,6 +25,8 @@ cp .env-example .env
 # Suba o banco de dados em plano de fundo:
 docker-compose up -d
 ```
+
+> ⚠️ **Nota Importante sobre Segurança no Teste:** Para facilitar e acelerar a avaliação, o contêiner Docker do MySQL foi configurado com `MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'`. Por esse motivo, o arquivo `.env-example` providenciado já contém a *Connection String* do Prisma pronta para o acesso `root` sem senha (`mysql://root@localhost:3307/techx_db`). Em um ambiente de Produção real, credenciais fortes e gerenciadores de segredos seriam mandatórios.
 
 ### 2. Configurando e Rodando a API NestJS
 Ainda dentro da pasta `backend`, configure a aplicação e conecte ao banco:
