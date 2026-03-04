@@ -1,0 +1,83 @@
+<div class="min-h-screen bg-gray-50">
+  <nav class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <h1 class="text-xl font-bold text-gray-900">Gerenciador de Tarefas</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          @if (currentUser) {
+            <span class="text-sm text-gray-700">Olá, {{ currentUser.name }} ({{ currentUser.role }})</span>
+            <button (click)="logout()" class="text-sm font-medium text-red-600 hover:text-red-500">Sair</button>
+          } @else {
+            <a routerLink="/auth/login" class="text-sm font-medium text-blue-600">Entrar</a>
+          }
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate">Todas as Tarefas</h2>
+        @if (currentUser) {
+          <button (click)="openCreateModal()" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+            Criar Tarefa
+          </button>
+        }
+      </div>
+
+      <div class="bg-white shadow overflow-hidden sm:rounded-md border border-gray-200">
+        <ul role="list" class="divide-y divide-gray-200">
+          
+          @for (task of tasks; track task.id) {
+            <li>
+              <div class="px-4 py-4 flex items-center sm:px-6">
+                <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
+                  <div class="truncate">
+                    <div class="flex text-sm">
+                      <p class="font-medium text-blue-600 truncate">{{ task.title }}</p>
+                      @if (task.completed) {
+                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Concluída</span>
+                      } @else {
+                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Pendente</span>
+                      }
+                    </div>
+                    <div class="mt-2 flex">
+                      <div class="flex items-center text-sm text-gray-500">
+                        <p>{{ task.description || 'Nenhuma descrição fornecida.' }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Actions -->
+                @if (canManage(task)) {
+                  <div class="ml-5 flex-shrink-0 flex space-x-2">
+                    <button (click)="openEditModal(task)" class="text-sm text-indigo-600 hover:text-indigo-900">Editar</button>
+                    <button (click)="deleteTask(task.id)" class="text-sm text-red-600 hover:text-red-900">Excluir</button>
+                  </div>
+                }
+              </div>
+            </li>
+          } @empty {
+            <li class="px-4 py-8 text-center text-gray-500">Nenhuma tarefa encontrada. Comece criando uma!</li>
+          }
+          
+        </ul>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Render Modal Component -->
+@if (isModalOpen) {
+  <app-task-modal
+    [task]="selectedTask"
+    (close)="closeModal()"
+    (save)="onSaveTask($event)">
+  </app-task-modal>
+}
