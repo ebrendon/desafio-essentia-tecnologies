@@ -33,6 +33,9 @@ npm install
 # Sincronize o banco de dados via Prisma (cria as tabelas do projeto)
 npx prisma db push
 
+# (Recomendado) Alimente o banco com usuários e tarefas iniciais (Seed)
+npx prisma db seed
+
 # (Opcional) Faça upload do Prisma Client mais recente
 npx prisma generate
 
@@ -74,6 +77,16 @@ npm run start
 ```
 Após a compilação, o sistema estará operando e disponível para acesso em: **[http://localhost:4200](http://localhost:4200)**.
 *(O Angular já está configurado com proxy para conectar à sua API hospedada de NestJS rodando na porta 3000)*.
+
+### 5. Credenciais de Teste (Geradas pelo Seed)
+Se você rodou o comando `npx prisma db seed` na etapa 2, os seguintes usuários estarão disponíveis para você testar imediatamente pela interface web ou API (a senha padrão para todos é **`123456`**):
+
+- **Administrador (Acesso irrestrito):**
+  - E-mail: `admin@techx.com`
+- **Usuário Comum 1 (Visão isolada de tarefas):**
+  - E-mail: `joao@techx.com`
+- **Usuário Comum 2 (Visão isolada de tarefas):**
+  - E-mail: `maria@techx.com`
 
 ## Estrutura do Projeto
 
